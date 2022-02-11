@@ -95,5 +95,6 @@ ln -s $HOME/.nix-profile/share/consolefonts nix
 ```
 
 ## TODO
-[] set up icons
-[] set up CUDA
+
+- [ ] set up icons
+- [ ] set up CUDA
