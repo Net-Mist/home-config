@@ -30,4 +30,14 @@ with import <nixpkgs> {};
     --prefix LD_LIBRARY_PATH : /home/seb/nixfiles/libgl
   '';
   };
+
+  burpsuite=pkgs.symlinkJoin { 
+  name = "burpsuite";
+  paths = [ pkgs.burpsuite ];
+  buildInputs = [ pkgs.makeWrapper ];
+  postBuild = ''
+    wrapProgram $out/bin/burpsuite \
+    --prefix LD_LIBRARY_PATH : /home/seb/nixfiles/libgl
+  '';
+  };
 }
