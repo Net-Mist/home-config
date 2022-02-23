@@ -49,7 +49,6 @@ in
         
     # tools
     zim
-    # pkgs.snowman
     # pkgs.cura
     pkgs.patchelf
     pkgs.inkscape
@@ -57,7 +56,19 @@ in
     pkgs.enlightenment.terminology
     gl_stuff.firefox
     gl_stuff.musescore
-    pkgs.blender
+    gl_stuff.blender
+    pkgs.openvpn
+    pkgs.redshift
+
+    # security
+    # pkgs.snowman
+    pkgs.nmap
+    pkgs.gobuster
+    gl_stuff.burpsuite
+    pkgs.metasploit
+    pkgs.wireshark
+    pkgs.samba
+    pkgs.exploitdb
     
     # game
     # multimc
@@ -75,5 +86,5 @@ in
   # these files were generated with `ipython profile create`
   home.file.".ipython/profile_default/ipython_config.py".source = ./config/ipython_config.py;
   home.file.".ipython/profile_default/ipython_kernel_config.py".source = ./config/ipython_kernel_config.py;
-  
+  home.file.".config/redshift.conf".source = ./config/redshift.conf;
 }
