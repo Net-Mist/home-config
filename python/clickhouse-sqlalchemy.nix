@@ -1,16 +1,21 @@
-with import <nixpkgs> {};
+# with import <nixpkgs> {};
+{ buildPythonPackage
+, fetchPypi
+, sqlalchemy
+, clickhouse-driver
+, requests
+}:
 
-
-python.pkgs.buildPythonPackage rec {
+buildPythonPackage rec {
   pname = "clickhouse-sqlalchemy";
-  version = "0.1.7";
+  version = "0.2.0";
 
-  src = python.pkgs.fetchPypi {
+  src = fetchPypi {
     inherit pname version;
-    sha256 = "sha256-/5ta943gb7dAhexNJ6YLO1hzP8RLDpcTxTiiqo+Dxeg=";
+    sha256 = "sha256-nA5ECcH0gKJFdZcG0pdxFErtFy15YSLZioAsMT25nGM";
   };
 
-  propagatedBuildInputs = with python.pkgs; [
+  propagatedBuildInputs = [
     sqlalchemy
     clickhouse-driver
     requests

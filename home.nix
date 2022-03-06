@@ -2,37 +2,39 @@
 
 let
   zim = import ./custom_pkgs/zim.nix;
-  # my_enchant = pkgs.callPackage /home/seb/workspace/nixpkgs/pkgs/development/libraries/enchant/2.x.nix { };
-  # my_pyenchant = pkgs.python3Packages.pyenchant.override {enchant2 = my_enchant; };
-  # my_pygtkspellcheck = pkgs.python3Packages.pygtkspellcheck.override {pyenchant = my_pyenchant; };
-  # zim = pkgs.zim.overrideAttrs (oldAttrs : {
-  #   	propagatedBuildInputs = with pkgs.python3Packages; [ my_pygtkspellcheck pyxdg pygobject3 pkgs.gtksourceview ];
-  # });
-  # test wrapping Hebrew
 
   node = pkgs.nodejs-17_x;
   yarn = pkgs.yarn.override {
     nodejs = node;
   };
-  multimc = import ./custom_pkgsmultimc.nix;
 
   python = import ./python;
+  pre-commit = pkgs.pre-commit.override {
+    python3Packages = python.pkgs;
+  };
+
+  multimc = import ./custom_pkgsmultimc.nix;
+
   gl_stuff = import ./gl_stuff.nix;
   vscode = import ./custom_pkgs/vscode.nix;
-in 
+
+  # TODO package in nix
+  austin = pkgs.callPackage /home/seb/workspace/nixpkgs/pkgs/development/tools/austin/default.nix { };
+in
 {
   home.username = "seb";
   home.homeDirectory = "/home/seb";
-  
+
   home.packages = [
+
     # dicts
     pkgs.aspellDicts.fr
     pkgs.aspellDicts.en-computers
-    pkgs.aspellDicts.en-science 
+    pkgs.aspellDicts.en-science
 
     # fonts
     pkgs.powerline-fonts
-  
+
     # dev
     pkgs.htop
     pkgs.git
@@ -40,17 +42,17 @@ in
     node
     yarn
     python
-    pkgs.pre-commit
+    pre-commit
     pkgs.hadolint # dockerfile linter
+    austin # python profiler
     # vscode
 
     # needed for pop-shell
     pkgs.nodePackages.typescript
-        
+
     # tools
-    zim
     # pkgs.cura
-    pkgs.patchelf
+    zim
     pkgs.inkscape
     pkgs.drawio
     pkgs.enlightenment.terminology
@@ -59,6 +61,12 @@ in
     gl_stuff.blender
     pkgs.openvpn
     pkgs.redshift
+
+    # nix tools
+    pkgs.nixpkgs-fmt
+    pkgs.patchelf
+    pkgs.nixpkgs-review
+
 
     # security
     # pkgs.snowman
@@ -69,14 +77,14 @@ in
     pkgs.wireshark
     pkgs.samba
     pkgs.exploitdb
-    
+
     # game
     # multimc
   ];
 
   home.stateVersion = "22.05";
   programs.home-manager.enable = true;
-  
+
   # program configurations
   home.file.".gitconfig".source = ./config/gitconfig;
   home.file.".gitconfig-work".source = ./config_secret/gitconfig-work;
