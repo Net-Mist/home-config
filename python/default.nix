@@ -1,86 +1,65 @@
-with import <nixpkgs> {};
+with import /home/seb/workspace/nixpkgs { };
 
-# look for https://nixpk.gs/pr-tracker.html?pr=152307 for python3.10.1 adaptation
 let
-  python = let
-    packageOverrides = self: super: {
-      # see https://github.com/NixOS/nixpkgs/pull/154290/files
-      ipykernel = super.ipykernel.overridePythonAttrs(old: rec {
-        # remove debugpy
-        propagatedBuildInputs = [
-          self.ipython
-          self.jupyter-client
-          self.tornado
-          self.traitlets
-        ];
+  python =
+    let
+      packageOverrides = self: super: {
+        # remove opt dependances
+        smart-open = super.smart-open.overridePythonAttrs (old: rec {
+          propagatedBuildInputs = [
+            super.requests
+          ];
+          doCheck = false;
+        });
 
-        postPatch = ''
-          substituteInPlace setup.py \
-            --replace "'debugpy>=1.0.0,<2.0'," ""
-        '';
-      });
+        my_clickhouse-sqlalchemy = self.callPackage ./clickhouse-sqlalchemy.nix { };
+        my_pydeps = self.callPackage ./pydeps.nix { };
+        my_cloudpathlib = self.callPackage ./cloudpathlib.nix { };
+        webdriver_manager = self.callPackage ./webdriver_manager.nix { };
+        mkdocs-jupyter = self.callPackage ./mkdocs-jupyter.nix { };
 
-      s3fs = super.s3fs.overridePythonAttrs(old: rec {
-        version = "2021.11.0";
-        src =  super.fetchPypi {
+        wpr = self.callPackage ./cs_package/wpr.nix { };
+
+        aiobotocore = super.aiobotocore.overridePythonAttrs (old: rec {
+          version = "2.1.0";
+          pname = "aiobotocore";
+          src = self.fetchPypi {
+            inherit pname version;
+            sha256 = "sha256-X9TXrvoIlv5N0ygV6tilLtXMuAFsfFdD/o/3HDwHQSA";
+          };
+        });
+
+        s3fs = super.s3fs.overridePythonAttrs (old: rec {
+          version = "2022.1.0";
           pname = "s3fs";
-          inherit version;
-          sha256 = "sha256-PCPqwfpbaFydUHlQsk91kp6LzR6pi5qVzyqctm7myfU=";
-        };
-        doCheck = false;
-      });
+          src = self.fetchPypi {
+            inherit pname version;
+            sha256 = "sha256-a6/B9rTpNepZUSwPONXLnCmdu/5zjkDD0d6PZ7TuH9Q";
+          };
+        }); 
 
-      # update version of fsspec for s3fs
-      fsspec = super.fsspec.overridePythonAttrs(old: rec {
-        version = "2021.11.0";
-        src =  super.fetchPypi {
-          pname = "fsspec";
-          inherit version;
-          sha256 = "sha256-y7e6/VmqM2hKkuhDh39K3AEJ+wcisaJufQj1puJQCQQ=";
-        };
-        doCheck = false;
-      });
-
-      # fix version of SQLAlchemy for clickhouse
-      sqlalchemy = super.sqlalchemy.overridePythonAttrs(old: rec {
-        version = "1.3.24";
-        src = super.fetchPypi {
-          pname = "SQLAlchemy";
-          inherit version;
-          sha256 = "sha256-67t3fL+TEjWbiXv4G6ANrg9ctp+6KhgmXcwYpvXvdRk=";
-        };
-      });
-
-      # fix version of databases because of SQLAlchemy 
-      databases = super.databases.overridePythonAttrs(old: rec {
-        version = "0.4.3";
-        src = super.fetchPypi {
-          pname = "databases";
-          inherit version;
-          sha256 = "sha256-FSHbf208WB/4GzVS4TCyehOu/qKlcpXmVzgIGDETevw=";
-        };
-        doCheck = false;
-      });
-      # use 
-        #     src = fetchFromGitHub {
-        #   owner = "boto";
-        #   repo = pname;
-        #   rev = version;
-        #   hash = "sha256-0Dl7oKB2xxq/a8do3HgBUIGay88yOGBUdOGo+QCtnUE=";
-        # };
-    };
-  in pkgs.python310.override {inherit packageOverrides; self = python;};
-
-  my_clickhouse-sqlalchemy = import ./clickhouse-sqlalchemy.nix;
+      };
+    in
+    pkgs.python310.override { inherit packageOverrides; self = python; };
 
   my-python-packages = python-packages: with python-packages; [
+    # package management
     setuptools
+    setuptools-scm
     build
     pip
+
+    # misc
+    notebook
     tqdm
     coloredlogs
-    notebook
     pylint
+    my_pydeps
+    nbdime
+
+    # documentation
+    mkdocs-jupyter
+    mkdocs
 
     # web
     requests
@@ -89,6 +68,8 @@ let
     fastapi
     uvicorn
     beautifulsoup4
+    httpx
+    h2
 
     # image
     pillow
@@ -104,19 +85,24 @@ let
     numpy
     pandas
     scikit-learn
+    gensim
     z3
     pyarrow # for .parquet manipulation
 
     # dataviz
     seaborn
     matplotlib
+    bokeh
 
     # S3 access
     fs-s3fs
     s3fs
     boto3
-  ]; 
+    my_cloudpathlib
+
+    # work
+    wpr
+  ];
 
 in
-  python.withPackages my-python-packages
-
+python.withPackages my-python-packages

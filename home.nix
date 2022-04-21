@@ -18,8 +18,8 @@ let
   gl_stuff = import ./gl_stuff.nix;
   vscode = import ./custom_pkgs/vscode.nix;
 
-  # TODO package in nix
-  austin = pkgs.callPackage /home/seb/workspace/nixpkgs/pkgs/development/tools/austin/default.nix { };
+  # TODO wait for https://github.com/NixOS/nixpkgs/pull/162990
+  austin = pkgs.callPackage ./custom_pkgs/austin.nix { };
 in
 {
   home.username = "seb";
@@ -44,8 +44,14 @@ in
     python
     pre-commit
     pkgs.hadolint # dockerfile linter
-    austin # python profiler
-    # vscode
+    # austin # python profiler
+    # vscode # doesn't work yet
+    pkgs.flex
+    pkgs.bison
+    pkgs.include-what-you-use
+    pkgs.cpplint
+    pkgs.clang-tools
+    pkgs.hugo
 
     # needed for pop-shell
     pkgs.nodePackages.typescript
@@ -61,12 +67,12 @@ in
     gl_stuff.blender
     pkgs.openvpn
     pkgs.redshift
+    pkgs.simplescreenrecorder
 
     # nix tools
     pkgs.nixpkgs-fmt
     pkgs.patchelf
     pkgs.nixpkgs-review
-
 
     # security
     # pkgs.snowman
@@ -95,4 +101,8 @@ in
   home.file.".ipython/profile_default/ipython_config.py".source = ./config/ipython_config.py;
   home.file.".ipython/profile_default/ipython_kernel_config.py".source = ./config/ipython_kernel_config.py;
   home.file.".config/redshift.conf".source = ./config/redshift.conf;
+
+  # for work
+  home.file.".ol-aws.yml".source = ./config_secret/ol-aws.yml;
+
 }
