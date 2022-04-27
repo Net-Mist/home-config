@@ -76,6 +76,8 @@ in
 
     # security
     # pkgs.snowman
+    # pkgs.tilem
+    # pkgs.ghidra
     pkgs.nmap
     pkgs.gobuster
     gl_stuff.burpsuite
@@ -83,6 +85,7 @@ in
     pkgs.wireshark
     pkgs.samba
     pkgs.exploitdb
+    pkgs.binwalk
 
     # game
     # multimc
@@ -95,6 +98,7 @@ in
   home.file.".gitconfig".source = ./config/gitconfig;
   home.file.".gitconfig-work".source = ./config_secret/gitconfig-work;
   home.file.".gitconfig-private".source = ./config_secret/gitconfig-private;
+  home.file.".config/git/ignore".source = ./config/gitignore;
   home.file.".config/htop/htoprc".source = ./config/htoprc;
 
   # these files were generated with `ipython profile create`

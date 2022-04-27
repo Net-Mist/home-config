@@ -21,4 +21,5 @@
 	defaultBranch = main
 [alias]	
 	lg = log --all --decorate --oneline --graph
-
+[merge]
+	conflictstyle = diff3
