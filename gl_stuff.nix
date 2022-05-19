@@ -40,4 +40,14 @@ with import <nixpkgs> { };
       --prefix LD_LIBRARY_PATH : /home/seb/nixfiles/libgl
     '';
   };
+
+  sweethome3d = pkgs.symlinkJoin {
+    name = "sweethome3d";
+    paths = [ pkgs.sweethome3d.application ];
+    buildInputs = [ pkgs.makeWrapper ];
+    postBuild = ''
+      wrapProgram $out/bin/sweethome3d \
+      --prefix LD_LIBRARY_PATH : /home/seb/nixfiles/libgl
+    '';
+  };
 }

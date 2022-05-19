@@ -46,8 +46,8 @@ in
     pkgs.hadolint # dockerfile linter
     # austin # python profiler
     # vscode # doesn't work yet
-    pkgs.flex
-    pkgs.bison
+    # pkgs.flex
+    # pkgs.bison
     pkgs.include-what-you-use
     pkgs.cpplint
     pkgs.clang-tools
@@ -58,6 +58,8 @@ in
 
     # tools
     # pkgs.cura
+    # gl_stuff.sweethome3d
+    pkgs.zotero
     zim
     pkgs.inkscape
     pkgs.drawio
@@ -78,6 +80,7 @@ in
     # pkgs.snowman
     # pkgs.tilem
     # pkgs.ghidra
+    pkgs.gdb
     pkgs.nmap
     pkgs.gobuster
     gl_stuff.burpsuite
@@ -108,5 +111,8 @@ in
 
   # for work
   home.file.".ol-aws.yml".source = ./config_secret/ol-aws.yml;
+
+  # For GDB, comes from https://github.com/cyrus-and/gdb-dashboard/blob/master/.gdbinit
+  home.file.".gdbinit".source = ./config/gdbinit;
 
 }

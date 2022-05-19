@@ -48,6 +48,7 @@ let
     setuptools-scm
     build
     pip
+    poetry
 
     # misc
     notebook
@@ -102,6 +103,9 @@ let
 
     # work
     wpr
+
+    # security
+    pycryptodome
   ];
 
 in
