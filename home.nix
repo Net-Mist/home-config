@@ -3,7 +3,7 @@
 let
   zim = import ./custom_pkgs/zim.nix;
 
-  node = pkgs.nodejs-17_x;
+  node = pkgs.nodejs-18_x;
   yarn = pkgs.yarn.override {
     nodejs = node;
   };
@@ -38,6 +38,7 @@ in
     # dev
     pkgs.htop
     pkgs.git
+    pkgs.git-lfs
     pkgs.gitg
     node
     yarn

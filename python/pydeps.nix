@@ -6,11 +6,11 @@
 
 buildPythonPackage rec {
   pname = "pydeps";
-  version = "1.10.12";
+  version = "1.10.18";
 
   src = fetchPypi {
     inherit pname version;
-    sha256 = "sha256-cSpEohH0e5taH/bpjidl7T+6+SbBlOpggdSJN4bFduw=";
+    sha256 = "sha256-1RL28JhJR6RVU1mHmM3yKaSiOiwTier2ATlBamj87F8=";
   };
 
   propagatedBuildInputs = [
